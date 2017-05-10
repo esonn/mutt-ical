@@ -1,9 +1,18 @@
-#!/usr/bin/env python
+#!/usr/bin/python2
 # -*- coding: utf8 -*-
 
 """
 This script is meant as a simple way to reply to ical invitations from mutt.
 See README for instructions and LICENSE for licensing information.
+
+
+Custom changes (eso):
+ - force use python2
+ - set default encoding to utf8, we're not in 1999 anymore (beginning of __main__):
+        reload(sys)
+        sys.setdefaultencoding('utf8')
+ - disabled email-check of invitee (doesn't work with group-addresses)
+ - fyi: must have python2-vobject installed (on arch: aur/python2-vobject)
 """
 
 from __future__ import with_statement
@@ -148,6 +157,10 @@ def display(ical):
     sys.stdout.write(description + "\n")
 
 if __name__=="__main__":
+    # HACK: by eso to get stuff working
+    reload(sys)
+    sys.setdefaultencoding('utf8')
+
     email_address = None
     accept_decline = 'ACCEPTED'
     opts, args=getopt(sys.argv[1:],"e:aidt")
@@ -181,6 +194,11 @@ if __name__=="__main__":
     set_accept_state(attendees,accept_decline)
     ans.vevent.add('attendee')
     ans.vevent.attendee_list.pop()
+
+    # The following block would deny sending replies, if e-mail address of
+    # script caller is not in invitation list - this doesn't work for e-mail
+    # lists, so commenting that smart behavior
+    '''
     flag = 1
     for attendee in attendees:
         if hasattr(attendee,'EMAIL_param'):
@@ -194,6 +212,7 @@ if __name__=="__main__":
     if flag:
         sys.stderr.write("Seems like you have not been invited to this event!\n")
         sys.exit(1)
+    '''
 
     icsfile, tempdir = write_to_tempfile(ans)
 
