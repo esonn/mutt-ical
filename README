@@ -2,6 +2,10 @@ mutt-ical.py is meant as a simple way to reply to display and reply to ical invi
 
 It was originally authored by Martin Sander, and later modified by Dominic White.
 
+This particular fork has been messed with by Erik Sonnleitner in order to make
+it work for modern Arch Linux systems (force utf8), and group e-mail addresses
+(remove checking if e-mail address is in invitee list).
+
 Installing
 ----------
 
